@@ -50,6 +50,35 @@ def test_stationarity(timeseries):
         dfoutput['Critical Value (%s)'%key] = value
     print (dfoutput)
 
+def seasonality(timeseries):
+    result = seasonal_decompose(timeseries, model='multiplicative')
+    print(result.trend)
+    print(result.seasonal)
+    print(result.resid)
+    print(result.observed)
+    result.plot()
+    plt.show()
+    # decomposition = seasonal_decompose(timeseries)
+    #
+    # trend = decomposition.trend
+    # seasonal = decomposition.seasonal
+    # residual = decomposition.resid
+    #
+    # ts_week_log_select = timeseries[-80:]
+    #
+    # plt.subplot(411)
+    # plt.plot(ts_week_log_select.index.to_pydatetime(), ts_week_log_select.values, label='Original')
+    # plt.legend(loc='best')
+    # plt.subplot(412)
+    # plt.plot(ts_week_log_select.index.to_pydatetime(), trend[-80:].values, label='Trend')
+    # plt.legend(loc='best')
+    # plt.subplot(413)
+    # plt.plot(ts_week_log_select.index.to_pydatetime(), seasonal[-80:].values,label='Seasonality')
+    # plt.legend(loc='best')
+    # plt.subplot(414)
+    # plt.plot(ts_week_log_select.index.to_pydatetime(), residual[-80:].values, label='Residuals')
+    # plt.legend(loc='best')
+    # plt.tight_layout()
 
 def acf_pacf(timeseries):
     #ACF and PACF plots
@@ -129,10 +158,11 @@ def finalize(timeseries):
 if __name__ == '__main__':
     df = pd.read_pickle('../data/df_original.pkl')
     ts_day, ts_day_log = data_clean(df)
-    test_stationarity(ts_day_log)
-    acf_pacf(ts_day_log)
-    arm(ts_day_log, 3, 2)
-    finalize(ts_day_log)
+    seasonality(ts_day)
+    # test_stationarity(ts_day_log)
+    # acf_pacf(ts_day_log)
+    # arm(ts_day_log, 3, 2)
+    # finalize(ts_day_log)
 
 #
 #
