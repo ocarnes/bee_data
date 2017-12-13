@@ -38,7 +38,7 @@ The univariate ARIMA model is currently performing best of the three models base
 4. Fine-tuning model parameters
 
 ### References ###
-[ARIMA models]( https://datascience.ibm.com/exchange/public/entry/view/815137c868b916821dec777bdc23013c
+1. [ARIMA models]( https://datascience.ibm.com/exchange/public/entry/view/815137c868b916821dec777bdc23013c
 )
-[RNNs](https://github.com/GalvanizeOpenSource/Recurrent_Neural_Net_Meetup/blob/master/RNN_Meetup_Presentation.pdf)
-[Multivariate LSTMs](https://machinelearningmastery.com/multivariate-time-series-forecasting-lstms-keras/)
+2. [RNNs](https://github.com/GalvanizeOpenSource/Recurrent_Neural_Net_Meetup/blob/master/RNN_Meetup_Presentation.pdf)
+3. [Multivariate LSTMs](https://machinelearningmastery.com/multivariate-time-series-forecasting-lstms-keras/)
