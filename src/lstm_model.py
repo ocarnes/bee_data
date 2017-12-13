@@ -1,6 +1,7 @@
 #https://machinelearningmastery.com/multivariate-time-series-forecasting-lstms-keras/
 import os
 import time
+import math
 import warnings
 import numpy as np
 import pandas as pd
@@ -11,6 +12,7 @@ from keras.models import Sequential
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+
 
 def data_clean(df):
     df.fillna(0, inplace=True)
@@ -73,7 +75,7 @@ def splitting(reframed):
     test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
     return train_X, train_y, test_X, test_y
 
-def modelling(train_X, train_y, test_X, test_y, scaler):
+def modeling(train_X, train_y, test_X, test_y, scaler):
     # design network
     model = Sequential()
     model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
@@ -101,7 +103,7 @@ def modelling(train_X, train_y, test_X, test_y, scaler):
     inv_y = scaler.inverse_transform(inv_y)
     inv_y = inv_y[:,0]
     # calculate RMSE
-    rmse = np.sqrt(mean_squared_error(inv_y, inv_yhat))
+    rmse = math.sqrt(mean_squared_error(inv_y, inv_yhat))
     print('Test RMSE: %.3f' % rmse)
 
 if __name__ == '__main__':
@@ -109,4 +111,4 @@ if __name__ == '__main__':
     df = pd.read_pickle('../data/df_weather.pkl')
     reframed, scaler = data_clean(df)
     train_X, train_y, test_X, test_y = splitting(reframed)
-    modelling(train_X, train_y, test_X, test_y, scaler)
+    modeling(train_X, train_y, test_X, test_y, scaler)
