@@ -17,14 +17,19 @@ Once Nan columns were eliminated and the appropriate additional weather data was
 
 ## Modeling ##
 Autoregressive integrated moving average ([ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average)) models and Long Short Term Memory ([LSTM](https://en.wikipedia.org/wiki/Long_short-term_memory)) networks were used to perform time-series analysis on the data.
+
 ![ARIMA](/img/ARIMA_RSS.png)
+
 The ARIMA model had a test RMSE of 0.1138. The Multivariate LSTM network, on the other hand, had a test RMSE of 10.752.
+
 ![LSTM Multivariate](/img/LSTM.png)
+
 Parameters have yet to be played around with though so these numbers will likely improve in the future.
+
 ![LSTM Univariate](/img/LSTM_univariate.png)
 
 ## Analysis ##
-The univariate ARIMA model is currently performing best of the three models. Future directions would likely include:
+The univariate ARIMA model is currently performing best of the three models based on RMSE values. Future directions would likely include:
 1. Regression analysis to fill in missing time series data
 2. Categorical variables on hive health
 3. Pulling minute by minute rather than day by day outside information
