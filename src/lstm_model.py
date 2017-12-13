@@ -33,7 +33,7 @@ def data_clean(df):
     # drop columns we don't want to predict
     lst = list(range(1+int(len(reframed.columns)/2), len(reframed.columns)))
     reframed.drop(reframed.columns[lst], axis=1, inplace=True)
-    return reframed
+    return reframed, scaler
 
 # convert series to supervised learning
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
@@ -73,7 +73,7 @@ def splitting(reframed):
     test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
     return train_X, train_y, test_X, test_y
 
-def modelling(train_X, train_y, test_X, test_y):
+def modelling(train_X, train_y, test_X, test_y, scaler):
     # design network
     model = Sequential()
     model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
@@ -85,6 +85,7 @@ def modelling(train_X, train_y, test_X, test_y):
     plt.plot(history.history['loss'], label='train')
     plt.plot(history.history['val_loss'], label='test')
     plt.legend()
+    plt.savefig('../img/LSTM.png')
     plt.show()
 
     # make a prediction
@@ -105,7 +106,7 @@ def modelling(train_X, train_y, test_X, test_y):
 
 if __name__ == '__main__':
     # dataset = read_csv('pollution.csv', header=0, index_col=0)
-    df = pd.read_pickle('df_weather.pkl')
-    reframed = data_clean(df)
+    df = pd.read_pickle('../data/df_weather.pkl')
+    reframed, scaler = data_clean(df)
     train_X, train_y, test_X, test_y = splitting(reframed)
-    modelling(train_X, train_y, test_X, test_y)
+    modelling(train_X, train_y, test_X, test_y, scaler)

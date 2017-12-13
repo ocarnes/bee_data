@@ -62,28 +62,6 @@ def summarize(df):
     df = df.drop_duplicates()
     return df
 
-def plot_help(df, code, temp, start, end, linestyle='-', marker='None'):
-    plt.plot_date(df[(df['zip_code'] == code) & (df.date <= end) & (df.date >= start)].date,
-        df[(df['zip_code'] == code) & (df.date <= end) & (df.date >= start)][temp],
-        label=temp, linestyle=linestyle, marker=marker)
-
-def plotting(df, temp):
-    for code in list(df_hive['zip_code'].unique())[0:5]:
-        print(code)
-        if df[df['lookup']==code].size == 0:
-            for alt_code in list(df[df['zip_code']==code]['lookup'].unique()):
-                plt.plot_date(df[(df['lookup'] == alt_code) & (df.date <= '2017-01-01')].date,
-                    df[(df['lookup'] == alt_code) & (df.date <= '2017-01-01')][temp], label=alt_code, marker='.')
-        plot_help(df, code, temp = 'mean', start='2016-04-13', end='2016-05-13', linestyle=None, marker='.')
-        plot_help(df, code, temp = 't_min', start='2016-04-13', end='2016-05-13')
-        plot_help(df, code, temp = 't_avg', start='2016-04-13', end='2016-05-13')
-        plot_help(df, code, temp = 't_max', start='2016-04-13', end='2016-05-13')
-
-        plt.legend()
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
-
 def regression(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X,y)
     regr = linear_model.LinearRegression()
@@ -92,75 +70,41 @@ def regression(X,y):
     print('Coefficients: \n', regr.coef_)
     print('Mean squared error: {}'.format(mean_squared_error(y_test, y_pred)))
     print('Variance score: {}'.format(r2_score(y_test, y_pred)))
-model = sm.OLS(y, X).fit()
-summary = model.summary()
-print(summary)
-
-if __name__ == '__main__':
-    filename = 'data/one_hive_data.csv'
-    if os.path.exists('df_hive.pkl'):
-        df_hive = pd.read_pickle('df_hive.pkl')
-    else:
-        df_hive = hive_data(filename)
-    if os.path.exists('df_weather.pkl'):
-        df_weather = pd.read_pickle('df_weather.pkl')
-    else:
-        df_combined = df_merge(df_hive)
-        df_weather = df_combined.dropna()
-        df_weather.iloc[:, 6:23] = df_weather.iloc[:,6:23].apply(pd.to_numeric)
-        df_weather.drop([ 18, 19], axis=1, inplace=True)
-    # if os.path.exists('df_clean.pkl'):
-    #     df_clean = pd.read_pickle('df_clean.pkl')
-    # else:
-    #     df_clean = summarize(df_weather)
-    # plotting(df_clean, 'mean')
-    df = pd.get_dummies(df_weather, columns=['lookup'], prefix='zip_')
-    # pd.scatter_matrix(df_weather)
-    y = df_weather.pop('temperature').values
-    X = pd.get_dummies(df_weather, columns=['lookup'], prefix='zip_').iloc[:,5::].values
-    regression(X,y)
-
-97212
-
-for hive in df_sum['lookup'].unique()[0:5]:
-     df_plot = df_sum[df_sum['lookup']==hive]
-     plt.plot_date(df_plot['date'], df_plot['mean'], ls='-', marker='.', color='y', alpha = 0.5, label='hive')
-     plt.plot_date(df_plot['date'], df_plot['t_min'], ls='-', marker='.', color='b', alpha = 0.5, label='ambient')
-     plt.axhspan(ymin=89.6, ymax=95, xmin=0, xmax=1, label='Sweet Spot')
-     plt.legend()
-     plt.title('Zip: {}'.format(hive))
-     plt.xticks(rotation=45)
-     plt.tight_layout()
-     plt.show()
+    model = sm.OLS(y, X).fit()
+    summary = model.summary()
+    print(summary)
 
 def plotz(df, column, max_date):
     for zips in df[column].unique():
         plt.plot_date(df[(df.date >= max_date)&(df[column] == zips)].date,
          df[(df.date >= max_date)&(df[column]==zips)]['temperature'],
-         marker='.', alpha = 0.25, label=zips)
-    plt.legend()
+         marker='.', alpha = 0.25)
+    # plt.legend()
+    plt.axhspan(ymin=89.6, ymax=95, xmin=0, xmax=1, label='Ideal Temp')
     plt.xticks(rotation=45)
+    plt.title('Temperature by Date and Zip Code')
+    plt.xlabel('Date')
+    plt.ylabel('Temp. (F)')
     plt.tight_layout()
-    plt.axhspan(ymin=89.6, ymax=85, xmin=0, xmax=1)
+    plt.savefig('../img/Hive_Data_by_Zip')
     plt.show()
-plotz(df_hive, 'zip_code', '2017-04-01')
 
-for hive in df_sum['lookup'].unique()[0:2]:
-     df_plot = df_sum[df_sum['lookup']==hive]
-     plt.bar(df_plot['date'], df_plot['std']-df_plot['t_min'])
-     plt.title(hive)
-     plt.xticks(rotation=45)
-     plt.tight_layout()
-     plt.show()
-
-date = '2017-01-01'
-df_new = weather[weather.date >= date]
-fig, ax1 = plt.subplots()
-ax2 = ax1.twinx()
-ax1.plot_date(df_new.date, df_new['temperature'], label='hive')
-ax1.plot_date(df_new.date, df_new['t_max'], label='t_max')
-ax1.plot_date(df_new.date, df_new['t_avg'], label='t_avg')
-ax1.plot_date(df_new.date, df_new['t_min'], label='t_min')
-ax2.plot_date(df_new.date, df_new['h_max'], label='h_max', color='cyan', linestyle='-', marker=None)
-plt.legend()
-plt.show()
+if __name__ == '__main__':
+    filename = '../data/one_hive_data.csv'
+    if os.path.exists('../data/df_hive.pkl'):
+        df_hive = pd.read_pickle('../data/df_hive.pkl')
+    else:
+        df_hive = hive_data(filename)
+    if os.path.exists('../data/df_weather.pkl'):
+        df_weather = pd.read_pickle('../data/df_weather.pkl')
+    else:
+        df_combined = df_merge(df_hive)
+        df_weather = df_combined.dropna()
+        df_weather.iloc[:, 6:23] = df_weather.iloc[:,6:23].apply(pd.to_numeric)
+        df_weather.drop([ 18, 19], axis=1, inplace=True)
+    df = pd.get_dummies(df_weather, columns=['lookup'], prefix='zip_')
+    # y = df_weather.pop('temperature').values
+    # X = pd.get_dummies(df_weather, columns=['lookup'], prefix='zip_').iloc[:,5::].values
+    # regression(X,y)
+    df_sum = summarize(df_weather)
+    plotz(df_hive, 'zip_code', '2016-04-01')

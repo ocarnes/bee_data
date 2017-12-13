@@ -81,16 +81,21 @@ def arm(timeseries, p, q):
     ts_log_diff = timeseries - timeseries.shift()
     # model = ARIMA(ts_week_log, order=(2, 1, 1))
     # results_ARIMA = model.fit(disp=-1)
-    plt.plot(ts_log_diff.index.to_pydatetime(), ts_log_diff.values)
-    plt.plot(ts_log_diff.index.to_pydatetime()[1::], results_ARIMA.fittedvalues, color='red')
-    plt.title('RSS: %.4f'% sum((results_ARIMA.fittedvalues-ts_log_diff[1::])**2))
+    plt.plot(ts_log_diff.index.to_pydatetime(), ts_log_diff.values, label='Expected')
+    plt.plot(ts_log_diff.index.to_pydatetime()[1::], results_ARIMA.fittedvalues, color='red', label='Prediction')
+    plt.legend()
+    plt.title('ARIMA Daily Temp. Average RSS: %.4f'% sum((results_ARIMA.fittedvalues-ts_log_diff[1::])**2))
+    plt.xlabel('Date')
+    plt.ylabel('log(Temp)')
+    plt.savefig('../img/ARIMA_RSS')
     plt.show()
     print(results_ARIMA.summary())
     # plot residual errors
     residuals = pd.DataFrame(results_ARIMA.resid)
     residuals.plot(kind='kde')
     print(residuals.describe())
-    plt.show
+    plt.savefig('../img/ARIMA_resids.png')
+    plt.show()
     predictions_ARIMA_diff = pd.Series(results_ARIMA.fittedvalues, copy=True)
     print (predictions_ARIMA_diff.head())
 
@@ -122,7 +127,7 @@ def finalize(timeseries):
 
 
 if __name__ == '__main__':
-    df = pd.read_pickle('df_original.pkl')
+    df = pd.read_pickle('../data/df_original.pkl')
     ts_day, ts_day_log = data_clean(df)
     test_stationarity(ts_day_log)
     acf_pacf(ts_day_log)

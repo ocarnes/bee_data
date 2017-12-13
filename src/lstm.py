@@ -12,14 +12,14 @@ import pandas as pd
 warnings.filterwarnings("ignore") #Hide messy Numpy warnings
 
 def load_data(filename, seq_len, normalise_window):
-    df = pd.read_pickle('../df_original.pkl')
+    df = pd.read_pickle(filename)
     df.fillna(0, inplace=True)
     # indexed_df = df.set_index('date')
     indexed_df = df.sort_values(['date', 'zip_code', 'lookup']).set_index('date')
     ts = indexed_df['temperature']
     # # print('{}: {}'.format(zips, ts.shape))
     # ts = ts[np.abs(ts-ts.mean())<=(3*ts.std())]
-    data = ts.resample('s').mean()
+    data = ts.resample('min').mean()
     data.dropna(inplace=True)
 
     sequence_length = seq_len + 1

@@ -16,6 +16,7 @@ def plot_results(predicted_data, true_data, figtitle):
     plt.plot(predicted_data, label='Prediction')
     plt.legend()
     plt.title(figtitle)
+    plt.savefig('../img/LSTM_univariate.png')
     plt.show()
 
 def plot_results_multiple(predicted_data, true_data, prediction_len):
@@ -36,13 +37,13 @@ if __name__=='__main__':
     global_start_time = time.time()
     # run with values below first to see how long it takes on your machine
     epochs  = 10  # suggest 100 for sine wave, 10 for stock
-    seq_len = 20 # suggest using 25 for sine wave, 50 for stock
+    seq_len = 50 # suggest using 25 for sine wave, 50 for stock
 
     print('> Loading data... ')
 
     # choose either the sine wave data or stock data
     # sine wave data
-    X_train, y_train, X_test, y_test = lstm.load_data('../data/sinwave.csv', seq_len, False) # data is sine wave, already normalized
+    X_train, y_train, X_test, y_test = lstm.load_data('../data/df_original.pkl', seq_len, False) # data is sine wave, already normalized
 
     # stock data
     #X_train, y_train, X_test, y_test = lstm.load_data('../data/sp500.csv', seq_len, True) # data is a stock, normalize data is True
@@ -64,9 +65,9 @@ if __name__=='__main__':
     # comment out either sine wave prediction code or stock prediction code
     # sine wave code
     predicted = lstm.predict_point_by_point(model, X_test)
-    plot_results(predicted, y_test, 'Sine wave - predict one point ahead')
+    plot_results(predicted, y_test, 'Temperature - predict one point ahead')
     predicted_full = lstm.predict_sequence_full(model, X_test, seq_len)
-    plot_results(predicted_full, y_test, 'Sine wave - predict full sequence from start seed')
+    plot_results(predicted_full, y_test, 'Temperature - predict full sequence from start seed')
 
     # stock prediction code
     #predictions = lstm.predict_sequences_multiple(model, X_test, seq_len, seq_len) #model, data, window_size, prediction length)
