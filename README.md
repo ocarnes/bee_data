@@ -16,7 +16,7 @@ It was assumed that hive data was recorded either a single location within a zip
 
 ![Hive Data by Zip](/img/Hive_Data_by_Zip.png)
 
-Once Nan columns were eliminated and the appropriate additional weather data was merged, preliminary modeling could begin.
+The data was fairly messy because most date / time /zip combos had between 2 and 500 temperature values associated with them. This was addressed by simply taking the mean of all values matching this identification criteria because the main goal was to establish baseline hive values. Once Nan columns were eliminated and the appropriate additional weather data was merged, preliminary modeling could begin.
 
 ## Modeling ##
 Autoregressive integrated moving average ([ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average)) models and Long Short Term Memory ([LSTM](https://en.wikipedia.org/wiki/Long_short-term_memory)) networks were used to perform time-series analysis on the data.
