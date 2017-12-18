@@ -1,7 +1,7 @@
 # README
 ## Intro ##
 This project was completed to provide recommendations for analyzing temperature data at specific hive locations throughout the country.
-While recommendations were the primary objective, I also really just wanted to dive in and make sure I could build the models I've suggested, in addition to making sure I actually *like* building these models. Turns out I do! So without further ado -
+While recommendations were the primary objective, I also really just wanted to dive in and make sure I could build the models I've suggested. So without further ado -
 
 ### Contents ###
 1. Data cleaning
